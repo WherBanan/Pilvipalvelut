@@ -10,10 +10,12 @@ public class ClientHandler extends Thread {
     private Socket clientSocket;
     private BufferedReader reader;
     private PrintWriter writer;
+    private Hub hub;
 
     // Creating new thread who handles clients
-    public ClientHandler(Socket client) {
+    public ClientHandler(Socket client, Hub hub) {
         this.clientSocket = client;
+        this.hub = hub;
 
         // Create new reader and writer
         try {
@@ -32,25 +34,24 @@ public class ClientHandler extends Thread {
             String receivedMessage;
             while (true) {
                 receivedMessage = reader.readLine();
-                System.out.println("Message recieved: "+ receivedMessage);
 
                 // Handle the message
                 if (receivedMessage != null && receivedMessage.startsWith("LIGHT;")) {
                     String[] parts = receivedMessage.split(";");
                     if (parts.length == 3) {
                         String command = parts[1];
-                        String id = parts[2];
+                        int id = Integer.valueOf(parts[2]);
 
                         // Handle the command
                         switch (command) {
                             case "ON":
-                                System.out.println("Switch ON light " + id);
+                                hub.turnOnLight(id);
                                 break;
                             case "OFF":
-                                System.out.println("Switch OFF light " + id);
+                                hub.turnOffLight(id);
                                 break;
                             case "QUERY":
-                                System.out.println("Query command received");
+                                sendLightStatus();
                                 break;
                             default:
                                 System.out.println("Unknown command: " + command);
@@ -69,9 +70,18 @@ public class ClientHandler extends Thread {
                 }
             }
             
+            
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+    // Send the status of all light to the client
+            private void sendLightStatus() {
+                StringBuilder status = new StringBuilder();
+                for (Light light : hub.getLights()) {
+                    status.append(light.getId()).append(":").append(light.isPowerOn() ? "ON" : "OFF").append(";");
+                }
+                writer.println(status.toString());
+            }
 }
