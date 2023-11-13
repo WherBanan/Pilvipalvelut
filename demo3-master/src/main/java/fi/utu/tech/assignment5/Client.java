@@ -19,9 +19,9 @@ public class Client {
 
             // Send message to server
             for (int i = 0; i < 2; i++) {
-                writer.println("Van tuu trii");
-                String response = reader.readLine();
-                System.out.println("Server response: " + response);
+                writer.println("LIGHT;ON;"+i);
+                //String response = reader.readLine();
+                //System.out.println("Server response: " + response);
             }
             
             writer.println("quit");

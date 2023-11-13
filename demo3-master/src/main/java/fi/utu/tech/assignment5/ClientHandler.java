@@ -35,8 +35,31 @@ public class ClientHandler extends Thread {
                 System.out.println("Message recieved: "+ receivedMessage);
 
                 // Handle the message
-                if (receivedMessage.equals("Van tuu trii")) {
-                    writer.println("Copy");
+                if (receivedMessage != null && receivedMessage.startsWith("LIGHT;")) {
+                    String[] parts = receivedMessage.split(";");
+                    if (parts.length == 3) {
+                        String command = parts[1];
+                        String id = parts[2];
+
+                        // Handle the command
+                        switch (command) {
+                            case "ON":
+                                System.out.println("Switch ON light " + id);
+                                break;
+                            case "OFF":
+                                System.out.println("Switch OFF light " + id);
+                                break;
+                            case "QUERY":
+                                System.out.println("Query command received");
+                                break;
+                            default:
+                                System.out.println("Unknown command: " + command);
+                                break;
+                                
+                        }
+                    } else {
+                        System.out.println("Invalid message type");
+                    }
                 } else if (receivedMessage.equals("quit")) {
                     clientSocket.close();
                     System.out.println("Client " + clientSocket.getInetAddress() + " Connection closed");
