@@ -27,7 +27,7 @@ public class Server {
             client.close();
             server.close();
         } catch (IOException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 }

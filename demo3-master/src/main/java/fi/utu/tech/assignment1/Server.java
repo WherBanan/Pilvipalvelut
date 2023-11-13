@@ -14,7 +14,7 @@ public class Server {
             customer.close();
             server.close();
         } catch (IOException e) {
-            System.err.println(e);
+            e.printStackTrace();;
         }
     }
 }

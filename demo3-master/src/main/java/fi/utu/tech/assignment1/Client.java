@@ -13,7 +13,7 @@ public class Client {
         
             System.out.println("Connection closed");
         } catch (IOException e) {
-            System.err.println(e);
+            e.printStackTrace();
         }
     }
 
